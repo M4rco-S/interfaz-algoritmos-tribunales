@@ -1,0 +1,66 @@
+header {
+    background-color: #552F7E;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
+    height: 7rem; 
+}
+
+header .container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    position: relative;
+}
+
+header img {
+    height: 4.3rem;
+}
+
+header h1 {
+    font-weight: 600;
+    font-size: 1.8rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+footer {
+    background-color: #552F7E;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+.surveys{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+}
+
+.surveys a{
+    text-decoration: none;
+    color: #C0C0C0;
+}
+
+.footer-text2{
+    color: #dddddd;
+    margin-bottom: 0rem;
+}
+
+@media (max-width: 600px) {
+    header img {
+        height: 3.5rem;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+}

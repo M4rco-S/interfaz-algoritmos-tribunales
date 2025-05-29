@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/head-foot-styles.css" />
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="assets/logo.png" alt="Logo" onclick="goToIndex()" style="cursor: pointer;" />
+            <h1>Modulo Analizador</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!--
+            <button class="back-button" onclick="goToBack()">
+                <img src="assets/back.png" alt="Atrás" />
+            </button> -->
+            <h2>Análisis de Información</h2>
+            <p>
+                En este módulo se aplicarán técnicas de minería de datos sobre información de pacientes que hayan sufrido algún tipo de
+                violencia, facilitando el descubrimiento de información, patrones y análisis sobre los datos.
+            </p>
+
+            <p>A continuación, deberá seleccionar el archivo que contenga los datos para el análisis. El archivo debe ser formato .csv</p>
+
+            <p class="selection">Seleccione el archivo</p>
+
+            <button class="large-button" id="uploadBtn" >Cargar archivo</button>
+
+            <input type="file" id="csvFile" accept=".csv" style="display: none;" />
+
+            <div class="file-status-container">
+                <p class="loaded-file">Archivo cargado: </p>
+                <p id="file-status">No hay archivo cargado</p>
+            </div>
+            
+            <div class="center-button">
+                <button class="large-button" class="next-button" id="sendBtn">Siguiente</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="surveys">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfgHR0da8DkLmtM_sCwasxJ-bepNWf4pRLW2y_E1yjqda0Ukg/viewform" class="footer-text1">Encuesta 1</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKe5Q-Dr1qMJOXpavzRmcQ3amLTKL7jDBt7vnF7OKfCRrzhg/viewform" class="footer-text1">Encuesta 2</a>
+            </div>
+            <p class="footer-text2">©2025, TODOS LOS DERECHOS RESERVADOS</p>
+        </div>
+    </footer>
+    <script src="functions/common/navigation.js"></script>
+    <script src="functions/common/api.js"></script>
+    <script src="functions/file-upload.js"></script>
+</body>
+</html>

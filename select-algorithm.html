@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>Algoritmos</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/head-foot-styles.css" />
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="assets/logo.png" alt="Logo" onclick="goToIndex()" style="cursor: pointer;" />
+            <h1>Modulo Analizador</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container"> 
+            <button class="back-button" onclick="goToIndex()">
+                <img src="assets/back.png" alt="Atrás" />
+            </button>
+
+            <div class="info-tab" id="infoTab">
+                <div class="tab-header" onclick="toggleInfoBox()">
+                    <div class="triangle" id="triangleIcon"></div>
+                    <h3 id="tabText">Datos seleccionados</h3>
+                </div>
+                <div class="tab-content" id="tabContent">
+                    <h4>Archivo:</h4>
+                    <p id="loaded-file-name">...</p>
+                </div>
+            </div>
+
+            <div class="limited-width-elements">
+                <h2>Seleccione el algoritmo</h2>
+                <p>
+                    Los algoritmos de minería de datos permiten extraer conocimiento útil a partir de grandes volúmenes de información, 
+                    aplicando técnicas estadísticas, matemáticas y de aprendizaje automático. 
+                    Cada enfoque permite explorar diferentes dimensiones del conjunto de datos, ya sea prediciendo categorías, 
+                    descubriendo estructuras latentes o identificando relaciones frecuentes entre variables
+                </p>
+
+                <div class="line-divider"></div>
+                
+                <div class="algor-divider">
+                    <h3>Clasificacion</h3>
+                    <div class="algor-divider-content">
+                        <p>
+                            Permite asignar a cada persona a una categoría predefinida según sus experiencias y situaciones. 
+                            Esto ayuda a identificar patrones y apoyar decisiones basadas en criterios previamente establecidos.
+                        </p>
+                        <button class="large-button next-button"  onclick="selectClasificacion()" >Seleccionar</button>
+                    </div>
+                </div>
+
+                <div class="line-divider"></div>
+
+                <div class="algor-divider">
+                    <h3>Asociasion</h3>
+                    <div class="algor-divider-content">
+                        <p>Organiza a las personas en grupos con características similares, sin categorías definidas de antemano. 
+                            Es útil para descubrir perfiles o patrones emergentes que podrían no haber sido identificados previamente.
+                        </p>
+                        <button class="large-button next-button" onclick="selectAsociacion()">Seleccionar</button>
+                    </div>
+                </div>
+
+                <div class="line-divider"></div>
+
+                <div class="algor-divider">
+                    <h3>Agrupacion</h3>
+                    <div class="algor-divider-content">
+                        <p> Detecta relaciones frecuentes entre factores sociales o experiencias compartidas. 
+                            Estas reglas permiten comprender mejor cómo ciertos factores tienden a presentarse juntos, facilitando la generación de hipótesis o intervenciones más informadas.
+                        </p>
+                        <button class="large-button next-button" onclick="selectAgrupacion()">Seleccionar</button>
+                    </div>
+                </div>
+
+                <div class="line-divider"></div>
+
+            </div>
+            
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="surveys">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfgHR0da8DkLmtM_sCwasxJ-bepNWf4pRLW2y_E1yjqda0Ukg/viewform" class="footer-text1">Encuesta 1</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKe5Q-Dr1qMJOXpavzRmcQ3amLTKL7jDBt7vnF7OKfCRrzhg/viewform" class="footer-text1">Encuesta 2</a>
+            </div>
+            <p class="footer-text2">©2025, TODOS LOS DERECHOS RESERVADOS</p>
+        </div>
+    </footer>
+
+    <script src="functions/common/navigation.js"></script>
+    <script src="functions/common/storage.js"></script>
+    <script src="functions/common/uiHelpers.js"></script>
+    <script src="functions/selection-algor.js"></script>
+</body>
+</html>

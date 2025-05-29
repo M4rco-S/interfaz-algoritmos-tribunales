@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Analisis</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/head-foot-styles.css" />
+    <link rel="stylesheet" href="styles/summary-styles.css" />
+</head>
+<body>
+     <header>
+        <div class="container">
+            <img src="assets/logo.png" alt="Logo" onclick="goToIndex()" style="cursor: pointer;" />
+            <h1>Modulo Analizador</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Resultados</h1>
+            <div id="baseInfo"></div>
+
+            <div id="tablaClasificacion" class="renderTable"></div>
+            <div id="tablaAsociacion" class="renderTable"></div>
+            <div id="tablaAgrupacion" class="renderTable"></div>
+            <div id="metricInfo"></div> 
+            <div id="tablaRelevancia" class="renderTable"></div>
+            <div id="tablaAgrupacionResumen" class="renderTable"></div>
+            <div id="agrupacionCostoContainer"></div>  
+
+            <div>
+                <button id="saveAnswers"  class="large-button" onclick="exportTable('resultado.xlsx')" >Guardar respuestas</button>
+                <button id="closeAnalysis"  class="large-button" onclick="endAnalysis()"  >Terminar</button>
+            </div>
+        </div>
+    </main>
+
+     <footer>
+        <div class="container">
+            <div class="surveys">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfgHR0da8DkLmtM_sCwasxJ-bepNWf4pRLW2y_E1yjqda0Ukg/viewform" class="footer-text1">Encuesta 1</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKe5Q-Dr1qMJOXpavzRmcQ3amLTKL7jDBt7vnF7OKfCRrzhg/viewform" class="footer-text1">Encuesta 2</a>
+            </div>
+            <p class="footer-text2">©2025, TODOS LOS DERECHOS RESERVADOS</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="functions/common/navigation.js"></script>
+    <script src="functions/common/api.js"></script>
+    <script src="functions/deployTables.js"></script>
+    <script src="functions/summary.js"></script>
+
+</body>
+</html>
