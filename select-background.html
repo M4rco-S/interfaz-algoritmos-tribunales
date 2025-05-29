@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <title>Antecedentes</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link rel="stylesheet" href="styles/head-foot-styles.css" />
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="assets/logo.png" alt="Logo" onclick="goToIndex()" style="cursor: pointer;" />
+            <h1>Modulo Analizador</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <button class="back-button" onclick="goToSelectAlgo()">
+                <img src="assets/back.png" alt="Atrás" />
+            </button>
+
+            <div class="info-tab" id="infoTab">
+                <div class="tab-header" onclick="toggleInfoBox()">
+                    <div class="triangle" id="triangleIcon"></div>
+                    <h3 id="tabText">Datos seleccionados</h3>
+                </div>
+                <div class="tab-content" id="tabContent">
+                    <h4>Archivo:</h4>
+                    <p id="loaded-file-name">...</p>
+                    <br>
+                    <h4>Algoritmo:</h4>
+                    <p  id="loaded-algo-name" class="algo-type">...</p>
+                    <p  class="algo-type">(</p>
+                    <p  id="loaded-algo-type" class="algo-type">...</p>
+                    <p  class="algo-type">)</p>
+                </div>
+            </div>
+
+            
+            <div class="limited-width-elements">
+                <h2>Antecedentes</h2>
+                <p>
+                    Son los atributos o variables de entrada que se usan para descubrir patrones. Representan la información conocida o las condiciones previas.
+                </p>
+                <h3>Seleccione los antecedentes</h3>
+
+                <div class="checkbox-wrapper">
+                    <section class="checkbox-container" id="checkboxContainer">
+
+                    </section>
+                </div>
+
+            </div>
+
+
+            <div class="center-button">
+                <button id="toNext" class="large-button">Siguiente</button>
+            </div>
+
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="surveys">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfgHR0da8DkLmtM_sCwasxJ-bepNWf4pRLW2y_E1yjqda0Ukg/viewform" class="footer-text1">Encuesta 1</a>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeKe5Q-Dr1qMJOXpavzRmcQ3amLTKL7jDBt7vnF7OKfCRrzhg/viewform" class="footer-text1">Encuesta 2</a>
+            </div>
+            <p class="footer-text2">©2025, TODOS LOS DERECHOS RESERVADOS</p>
+        </div>
+    </footer>
+    <script src="functions/common/navigation.js"></script>
+    <script src="functions/common/storage.js"></script>
+    <script src="functions/common/api.js"></script>
+    <script src="functions/common/uiHelpers.js"></script>
+    <script src="functions/selection-back.js"></script>
+</body>
+</html>
+
+
