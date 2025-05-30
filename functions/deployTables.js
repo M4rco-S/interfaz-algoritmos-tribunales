@@ -1,14 +1,18 @@
+/**
+ * Renderiza la tabla de clasificación usando datos almacenados en localStorage.
+ * Procesa condiciones y sus resultados, y muestra una tabla de reglas y otra de relevancia.
+ */
 function renderClasificacionTables() {
   let raw = localStorage.getItem('serverResponse');
   if (!raw) return;
 
   try {
-    // ['{', '"results": [', ...]
+    // Detecta si es un array de strings y lo convierte a uno solo
     if (Array.isArray(raw)) {
       raw = raw.join('');
     }
 
-    //  "[\"{\", ...]"
+    // Caso especial: string que contiene un array de JSONs en string
     if (typeof raw === 'string' && raw.trim().startsWith('["')) {
       const array = JSON.parse(raw);     
       raw = array.join(''); 
@@ -71,6 +75,10 @@ function renderClasificacionTables() {
   }
 }
 
+/**
+ * Renderiza la tabla de asociación usando datos de reglas y soporte.
+ * La información proviene de localStorage.
+ */
 function renderAsociacionTables() {
   const raw = localStorage.getItem('serverResponse');
   if (!raw) return;
@@ -114,6 +122,10 @@ function renderAsociacionTables() {
   if (container) container.innerHTML = html;
 }
 
+/**
+ * Renderiza los resultados de agrupación desde localStorage.
+ * Muestra una tabla principal, un resumen por grupo y el costo de la agrupación.
+ */
 function renderAgrupacionTables() {
   const raw = localStorage.getItem('serverResponse');
   if (!raw) return;

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: selection-consequent.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: selection-consequent.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Guarda en localStorage el valor de la consecuencia seleccionada.
+ *
+ * @function saveConseq
+ * @param {HTMLInputElement} selected - Elemento input seleccionado con el valor de la consecuencia.
+ * @returns {void}
+ */
+function saveConseq(selected) {
+    const valor = selected.value;
+    localStorage.setItem('conseqSelected', valor);
+}
+
+/**
+ * Ejecuta el análisis una vez que el usuario selecciona una consecuencia.
+ * Si se selecciona, guarda la información y redirige a la página de resumen.
+ *
+ * @function toAnalysis
+ * @returns {void}
+ */
+function toAnalysis() {
+    const selected = document.querySelector('input[name="conseq"]:checked');
+
+    if (selected) {
+        saveConseq(selected);
+        
+        startAnalysis().then(data => {
+            if (data !== null) {
+                localStorage.setItem('serverResponse', JSON.stringify(data));
+                window.location.href = 'summary.html';
+            }
+        });
+
+    } else {
+        console.warn("No se ha seleccionado ninguna consecuencia.");
+    }
+}
+
+/**
+ * Evento que se dispara cuando se carga completamente la ventana.
+ * Genera las opciones de radio para la selección de consecuencia,
+ * filtrando los antecedentes ya seleccionados.
+ *
+ * @event window.onload
+ * @returns {void}
+ */
+window.onload = function () {
+    const backgroundSelected = JSON.parse(localStorage.getItem("backgroundSelectedKey") || "[]");
+
+    const rawHeaders = localStorage.getItem("encabezadosCSV");
+    let headers = [];
+
+    try {
+        const parsedArray = JSON.parse(rawHeaders);
+        headers = JSON.parse(parsedArray[0]);
+    } catch (error) {
+        console.error("Error al parsear encabezadosCSV:", error);
+    }
+
+    const filteredOptions = headers.filter(op => !backgroundSelected.includes(op.code));
+
+    const radiosContainer = document.getElementById("radioContainer");
+
+    if (filteredOptions.length === 0) {
+        radiosContainer.innerHTML = "&lt;p>No hay opciones disponibles para consecuencia.&lt;/p>";
+    } else {
+        filteredOptions.forEach((opcion) => {
+            const label = document.createElement("label");
+            label.className = "radio-item";
+
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.name = "conseq";
+            input.value = opcion.code;
+
+            const span = document.createElement("span");
+            span.textContent = opcion.name;
+
+            label.appendChild(span);
+            label.appendChild(input);
+            radiosContainer.appendChild(label);
+        });
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Events</h3><ul><li><a href="global.html#event:DOMContentLoaded">DOMContentLoaded</a></li><li><a href="window.html#.event:onload">onload</a></li></ul><h3>Global</h3><ul><li><a href="global.html#chargeBackground">chargeBackground</a></li><li><a href="global.html#cleanFile">cleanFile</a></li><li><a href="global.html#endAnalysis">endAnalysis</a></li><li><a href="global.html#exportTable">exportTable</a></li><li><a href="global.html#getHeader">getHeader</a></li><li><a href="global.html#goToIndex">goToIndex</a></li><li><a href="global.html#goToSelectAlgo">goToSelectAlgo</a></li><li><a href="global.html#goToSelectBack">goToSelectBack</a></li><li><a href="global.html#implementedAlgorithms">implementedAlgorithms</a></li><li><a href="global.html#isInternalNavigation">isInternalNavigation</a></li><li><a href="global.html#renderAgrupacionTables">renderAgrupacionTables</a></li><li><a href="global.html#renderAsociacionTables">renderAsociacionTables</a></li><li><a href="global.html#renderClasificacionTables">renderClasificacionTables</a></li><li><a href="global.html#renderInfoAlgoritmo">renderInfoAlgoritmo</a></li><li><a href="global.html#saveConseq">saveConseq</a></li><li><a href="global.html#saveSelection">saveSelection</a></li><li><a href="global.html#selectAgrupacion">selectAgrupacion</a></li><li><a href="global.html#selectAsociacion">selectAsociacion</a></li><li><a href="global.html#selectClasificacion">selectClasificacion</a></li><li><a href="global.html#sendFile">sendFile</a></li><li><a href="global.html#startAnalysis">startAnalysis</a></li><li><a href="global.html#toAnalysis">toAnalysis</a></li><li><a href="global.html#toggleInfoBox">toggleInfoBox</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri May 30 2025 10:38:26 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

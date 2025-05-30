@@ -1,3 +1,16 @@
+/**
+ * Lista de algoritmos implementados.
+ * @type {Array<{
+ *   code: string,
+ *   type: 'sup' | 'uns',
+ *   name: string,
+ *   desc: string,
+ *   metric: {
+ *     name: string,
+ *     desc: string
+ *   }
+ * }>}
+ */
 const implementedAlgorithms = [
   {
     code:'clasificacion',
@@ -31,10 +44,16 @@ const implementedAlgorithms = [
   },
 ];
 
+/**
+ * Limpia el almacenamiento local antes de salir o recargar la página.
+ */
 window.addEventListener('beforeunload', function () {
   localStorage.clear();
 });
 
+/**
+ * Renderiza en el DOM la información del algoritmo seleccionado.
+ */
 function renderInfoAlgoritmo() {
   const selectedCode = localStorage.getItem('algorithmSelectedKey');
   const info = implementedAlgorithms.find(algo => algo.code === selectedCode);
@@ -67,27 +86,34 @@ function renderInfoAlgoritmo() {
   `;
 }
 
+/**
+ * Ejecuta al cargar el DOM: renderiza la información y muestra tablas según el algoritmo.
+ */
 document.addEventListener('DOMContentLoaded', () => {
-    const algorithm = localStorage.getItem('algorithmSelectedKey');
+  const algorithm = localStorage.getItem('algorithmSelectedKey');
 
-    renderInfoAlgoritmo();
+  renderInfoAlgoritmo();
 
-    switch (algorithm) {
+  switch (algorithm) {
     case 'clasificacion':
-        renderClasificacionTables();
-        break;
+      renderClasificacionTables();
+      break;
     case 'reglas':
-        renderAsociacionTables();
-        break;
+      renderAsociacionTables();
+      break;
     case 'agrupacion':
-        renderAgrupacionTables();
-        break;
+      renderAgrupacionTables();
+      break;
     default:
-        console.warn('Algoritmo no reconocido:', algorithm);
-    }
-
+      console.warn('Algoritmo no reconocido:', algorithm);
+  }
 });
 
+/**
+ * Exporta la tabla actualmente visible a un archivo Excel.
+ * 
+ * @param {string} [fileName="exportado.xlsx"] - Nombre del archivo a exportar.
+ */
 function exportTable(fileName = "exportado.xlsx") {
   const posiblesIds = [
     'tablaAgrupacion',
@@ -113,7 +139,10 @@ function exportTable(fileName = "exportado.xlsx") {
   XLSX.writeFile(wb, fileName);
 }
 
-function endAnalysis(){
+/**
+ * Termina el análisis actual, limpia el almacenamiento local y redirige al inicio.
+ */
+function endAnalysis() {
   localStorage.clear();
   window.location.href = 'index.html';
   

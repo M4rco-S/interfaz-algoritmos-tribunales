@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: selection-back.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: selection-back.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Carga los encabezados almacenados en `localStorage` bajo la clave 'encabezadosCSV',
+ * genera una lista de checkboxes en el contenedor con id 'checkboxContainer'.
+ * Los encabezados deben estar en formato JSON como arreglo de objetos con propiedades `name` y `code`.
+ *
+ * @function chargeBackground
+ * @returns {void}
+ */
+function chargeBackground() {
+    const headersJSON = localStorage.getItem('encabezadosCSV');
+
+    if (headersJSON) {
+        try {
+            const uniqueStringArray = JSON.parse(headersJSON);
+            const headers = JSON.parse(uniqueStringArray[0]);
+            const container = document.getElementById('checkboxContainer');
+
+            headers.forEach(item => {
+                const label = document.createElement('label');
+                label.classList.add('checkbox-item');
+
+                const span = document.createElement('span');
+                span.textContent = item.name;
+
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.value = item.code;
+
+                label.appendChild(span);
+                label.appendChild(input);
+
+                container.appendChild(label);
+            });
+        } catch (e) {
+            console.error('Error al parsear encabezadosCSV:', e);
+        }
+    } else {
+        console.warn('No se encontró "encabezadosCSV" en localStorage');
+    }
+}
+
+/**
+ * Guarda la selección del usuario de los checkboxes en `localStorage` bajo las claves:
+ * - `backgroundSelectedName`: nombres visibles (texto de los checkboxes)
+ * - `backgroundSelectedKey`: valores técnicos (atributo value)
+ *
+ * @function saveSelection
+ * @returns {void}
+ */
+function saveSelection() {
+    const selectedName = [];
+    const selectedKey = [];
+    const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            const label = checkbox.closest('label').querySelector('span').textContent;
+            const value = checkbox.value;
+            selectedName.push(label);
+            selectedKey.push(value);
+        }
+    });
+
+    localStorage.setItem('backgroundSelectedName', JSON.stringify(selectedName));
+    localStorage.setItem('backgroundSelectedKey', JSON.stringify(selectedKey));
+}
+
+/**
+ * Evento que se ejecuta cuando el DOM está completamente cargado.
+ * Inicializa la carga de antecedentes (checkboxes) y configura el botón
+ * "Siguiente" o "Analizar" dependiendo del tipo de algoritmo seleccionado.
+ *
+ * @event DOMContentLoaded
+ * @returns {void}
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    chargeBackground();
+    const type = localStorage.getItem('algorithmType');
+    const nextButton = document.getElementById('toNext');
+
+    if (type) {
+        if (type === "Supervisado") {
+            nextButton.textContent = "Siguiente";
+            nextButton.onclick = function () {
+                saveSelection();
+                window.location.href = "select-consequent.html";
+            };
+        } else {
+            nextButton.textContent = "Analizar";
+            nextButton.onclick = function () {
+                saveSelection();
+                startAnalysis().then(data => {
+                    if (data !== null) {
+                        localStorage.setItem('serverResponse', JSON.stringify(data));
+                        window.location.href = 'summary.html';
+                    }
+                });
+            };
+        }
+    }
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Events</h3><ul><li><a href="global.html#event:DOMContentLoaded">DOMContentLoaded</a></li><li><a href="window.html#.event:onload">onload</a></li></ul><h3>Global</h3><ul><li><a href="global.html#chargeBackground">chargeBackground</a></li><li><a href="global.html#cleanFile">cleanFile</a></li><li><a href="global.html#endAnalysis">endAnalysis</a></li><li><a href="global.html#exportTable">exportTable</a></li><li><a href="global.html#getHeader">getHeader</a></li><li><a href="global.html#goToIndex">goToIndex</a></li><li><a href="global.html#goToSelectAlgo">goToSelectAlgo</a></li><li><a href="global.html#goToSelectBack">goToSelectBack</a></li><li><a href="global.html#implementedAlgorithms">implementedAlgorithms</a></li><li><a href="global.html#isInternalNavigation">isInternalNavigation</a></li><li><a href="global.html#renderAgrupacionTables">renderAgrupacionTables</a></li><li><a href="global.html#renderAsociacionTables">renderAsociacionTables</a></li><li><a href="global.html#renderClasificacionTables">renderClasificacionTables</a></li><li><a href="global.html#renderInfoAlgoritmo">renderInfoAlgoritmo</a></li><li><a href="global.html#saveConseq">saveConseq</a></li><li><a href="global.html#saveSelection">saveSelection</a></li><li><a href="global.html#selectAgrupacion">selectAgrupacion</a></li><li><a href="global.html#selectAsociacion">selectAsociacion</a></li><li><a href="global.html#selectClasificacion">selectClasificacion</a></li><li><a href="global.html#sendFile">sendFile</a></li><li><a href="global.html#startAnalysis">startAnalysis</a></li><li><a href="global.html#toAnalysis">toAnalysis</a></li><li><a href="global.html#toggleInfoBox">toggleInfoBox</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri May 30 2025 10:38:26 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

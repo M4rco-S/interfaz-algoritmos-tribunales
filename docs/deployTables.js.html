@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: deployTables.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: deployTables.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Renderiza la tabla de clasificación usando datos almacenados en localStorage.
+ * Procesa condiciones y sus resultados, y muestra una tabla de reglas y otra de relevancia.
+ */
+function renderClasificacionTables() {
+  let raw = localStorage.getItem('serverResponse');
+  if (!raw) return;
+
+  try {
+    // Detecta si es un array de strings y lo convierte a uno solo
+    if (Array.isArray(raw)) {
+      raw = raw.join('');
+    }
+
+    // Caso especial: string que contiene un array de JSONs en string
+    if (typeof raw === 'string' &amp;&amp; raw.trim().startsWith('["')) {
+      const array = JSON.parse(raw);     
+      raw = array.join(''); 
+    }
+
+    const parsed = JSON.parse(raw);
+    const rules = parsed.results;
+    const relevance = parsed.data2?.results?.[0];
+
+    let htmlRules = `
+      &lt;table border="1">
+        &lt;thead>
+          &lt;tr>
+            &lt;th>Condición &lt;/th>
+            &lt;th>${Object.keys(rules[0]).find(k => k !== 'condición')}&lt;/th>
+          &lt;/tr>
+        &lt;/thead>
+        &lt;tbody>
+    `;
+
+    rules.forEach(regla => {
+      const antecedente = regla['condición'];
+      const consecuenteKey = Object.keys(regla).find(k => k !== 'condición');
+      const consecuente = regla[consecuenteKey];
+      htmlRules += `
+        &lt;tr>
+          &lt;td>${antecedente}&lt;/td>
+          &lt;td>${consecuente}&lt;/td>
+        &lt;/tr>
+      `;
+    });
+
+    htmlRules += `&lt;/tbody>&lt;/table>`;
+
+    let htmlRelevance = '';
+    if (relevance) {
+      htmlRelevance = `
+        &lt;table border="1">
+          &lt;thead>
+            &lt;tr>
+                ${Object.keys(relevance).map(k => 
+                `&lt;th>${k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}&lt;/th>`
+                ).join('')}
+            &lt;/tr>
+          &lt;/thead>
+          &lt;tbody>
+            &lt;tr>
+              ${Object.values(relevance).map(v => `&lt;td>${v}&lt;/td>`).join('')}
+            &lt;/tr>
+          &lt;/tbody>
+        &lt;/table>
+      `;
+    }
+
+    document.getElementById('tablaClasificacion').innerHTML = htmlRules;
+    document.getElementById('tablaRelevancia').innerHTML = htmlRelevance;
+
+  } catch (e) {
+    console.error('Error al procesar serverResponse:', e);
+  }
+}
+
+/**
+ * Renderiza la tabla de asociación usando datos de reglas y soporte.
+ * La información proviene de localStorage.
+ */
+function renderAsociacionTables() {
+  const raw = localStorage.getItem('serverResponse');
+  if (!raw) return;
+
+  let parsedData;
+  try {
+    parsedData = JSON.parse(JSON.parse(raw.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']')).join(''));
+  } catch (e) {
+    console.error('Error al parsear serverResponse:', e);
+    return;
+  }
+
+  const results = parsedData.results;
+  if (!results || !Array.isArray(results)) {
+    console.warn('No se encontraron resultados válidos');
+    return;
+  }
+
+  let html = `
+    &lt;table border="1" style="border-collapse: collapse; width: 100%; text-align: left;">
+      &lt;thead>
+        &lt;tr>
+          &lt;th>Si&lt;/th>
+          &lt;th>Entonces&lt;/th>
+          &lt;th>Soporte (%)&lt;/th>
+        &lt;/tr>
+      &lt;/thead>
+      &lt;tbody>
+        ${results.map(regla => `
+          &lt;tr>
+            &lt;td>${regla["Si"]}&lt;/td>
+            &lt;td>${regla["Entonces"]}&lt;/td>
+            &lt;td>${regla["Soporte (%)"]}&lt;/td>
+          &lt;/tr>
+        `).join('')}
+      &lt;/tbody>
+    &lt;/table>
+  `;
+
+  const container = document.getElementById('tablaAsociacion');
+  if (container) container.innerHTML = html;
+}
+
+/**
+ * Renderiza los resultados de agrupación desde localStorage.
+ * Muestra una tabla principal, un resumen por grupo y el costo de la agrupación.
+ */
+function renderAgrupacionTables() {
+  const raw = localStorage.getItem('serverResponse');
+  if (!raw) return;
+
+  let parsedData;
+  try {
+    const arrayDeLineas = JSON.parse(raw);
+    parsedData = JSON.parse(arrayDeLineas.join(''));
+  } catch (e) {
+    console.error('Error al parsear serverResponse:', e);
+    return;
+  }
+
+  const results = parsedData.results;
+  if (!results || !Array.isArray(results)) {
+    console.warn('No se encontraron resultados válidos');
+    return;
+  }
+
+  let htmlMain = `
+    &lt;h3>Resultados de Agrupación&lt;/h3>
+    &lt;table border="1" style="border-collapse: collapse; width: 100%; text-align: left; margin-bottom: 20px;">
+      &lt;thead>
+        &lt;tr>
+          ${Object.keys(results[0]).map(key => {
+            const label = key.replace(/_/g, ' ')
+                            .replace(/\b\w/g, c => c.toUpperCase());
+            return `&lt;th>${label}&lt;/th>`;
+          }).join('')}
+        &lt;/tr>
+      &lt;/thead>
+      &lt;tbody>
+        ${results.map(row => `
+          &lt;tr>
+            ${Object.values(row).map(value => `&lt;td>${value}&lt;/td>`).join('')}
+          &lt;/tr>
+        `).join('')}
+      &lt;/tbody>
+    &lt;/table>
+  `;
+
+  const conteoPorGrupo = {};
+  results.forEach(row => {
+    const grupo = row.grupo;
+    conteoPorGrupo[grupo] = (conteoPorGrupo[grupo] || 0) + 1;
+  });
+
+  const grupos = Object.keys(conteoPorGrupo).sort((a, b) => a - b);
+  const total = results.length;
+
+  let htmlResumen = `
+    &lt;h3>Cantidad de elementos por grupo&lt;/h3>
+    &lt;table>
+      &lt;thead>
+        &lt;tr>
+          ${grupos.map(g => `&lt;th>Grupo ${g}&lt;/th>`).join('')}
+          &lt;th>Total&lt;/th>
+        &lt;/tr>
+      &lt;/thead>
+      &lt;tbody>
+        &lt;tr>
+          ${grupos.map(g => `&lt;td>${conteoPorGrupo[g]}&lt;/td>`).join('')}
+          &lt;td>${total}&lt;/td>
+        &lt;/tr>
+      &lt;/tbody>
+    &lt;/table>
+  `;
+
+  const divPrincipal = document.getElementById('tablaAgrupacion');
+  const divResumen = document.getElementById('tablaAgrupacionResumen');
+  if (divPrincipal) divPrincipal.innerHTML = htmlMain;
+  if (divResumen) divResumen.innerHTML = htmlResumen;
+
+  const costo = parsedData.costo;
+  const divCosto = document.getElementById('agrupacionCostoContainer');
+  if (divCosto &amp;&amp; typeof costo !== 'undefined') {
+    divCosto.innerHTML = `
+      &lt;h3>Costo de agrupación&lt;/h3>
+      &lt;p>&lt;strong>${costo}&lt;/strong>&lt;/p>
+    `;
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Events</h3><ul><li><a href="global.html#event:DOMContentLoaded">DOMContentLoaded</a></li><li><a href="window.html#.event:onload">onload</a></li></ul><h3>Global</h3><ul><li><a href="global.html#chargeBackground">chargeBackground</a></li><li><a href="global.html#cleanFile">cleanFile</a></li><li><a href="global.html#endAnalysis">endAnalysis</a></li><li><a href="global.html#exportTable">exportTable</a></li><li><a href="global.html#getHeader">getHeader</a></li><li><a href="global.html#goToIndex">goToIndex</a></li><li><a href="global.html#goToSelectAlgo">goToSelectAlgo</a></li><li><a href="global.html#goToSelectBack">goToSelectBack</a></li><li><a href="global.html#implementedAlgorithms">implementedAlgorithms</a></li><li><a href="global.html#isInternalNavigation">isInternalNavigation</a></li><li><a href="global.html#renderAgrupacionTables">renderAgrupacionTables</a></li><li><a href="global.html#renderAsociacionTables">renderAsociacionTables</a></li><li><a href="global.html#renderClasificacionTables">renderClasificacionTables</a></li><li><a href="global.html#renderInfoAlgoritmo">renderInfoAlgoritmo</a></li><li><a href="global.html#saveConseq">saveConseq</a></li><li><a href="global.html#saveSelection">saveSelection</a></li><li><a href="global.html#selectAgrupacion">selectAgrupacion</a></li><li><a href="global.html#selectAsociacion">selectAsociacion</a></li><li><a href="global.html#selectClasificacion">selectClasificacion</a></li><li><a href="global.html#sendFile">sendFile</a></li><li><a href="global.html#startAnalysis">startAnalysis</a></li><li><a href="global.html#toAnalysis">toAnalysis</a></li><li><a href="global.html#toggleInfoBox">toggleInfoBox</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri May 30 2025 10:38:26 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

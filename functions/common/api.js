@@ -1,5 +1,14 @@
+/** @constant {string} url - URL base del backend. */
 const url = "http://localhost:8000/api";
 
+/**
+ * Envía un archivo CSV al servidor mediante POST.
+ * 
+ * @async
+ * @function sendFile
+ * @param {File} selectedFile - Archivo CSV seleccionado por el usuario.
+ * @returns {Promise<boolean>} Retorna `true` si la carga fue exitosa, de lo contrario `false`.
+ */
 async function sendFile(selectedFile) {
     const formData = new FormData();
     formData.append('bd_name', selectedFile);
@@ -27,8 +36,15 @@ async function sendFile(selectedFile) {
     }
 }
 
-
-
+/**
+ * Obtiene los encabezados del archivo cargado desde el servidor y los guarda en localStorage.
+ * Redirige al usuario a la página `select-algorithm.html` al finalizar.
+ *
+ * @async
+ * @function getHeader
+ * @param {string} fileName - Nombre del archivo CSV previamente cargado.
+ * @returns {Promise<void>}
+ */
 async function getHeader(fileName) {
     try {
         const response = await fetch(`${url}/get-features?fileName=${encodeURIComponent(fileName)}`);
@@ -43,7 +59,13 @@ async function getHeader(fileName) {
     }
 }
 
-
+/**
+ * Inicia el análisis enviando los datos seleccionados por el usuario al servidor.
+ *
+ * @async
+ * @function startAnalysis
+ * @returns {Promise<Object|null>} Objeto con los resultados del análisis si fue exitoso, o `null` en caso de error.
+ */
 async function startAnalysis() {
     const algorithm = localStorage.getItem('algorithmSelectedKey');
     const background = JSON.parse(localStorage.getItem('backgroundSelectedKey') || '[]');
@@ -56,7 +78,6 @@ async function startAnalysis() {
         consecuente: consequent,
         BD_NAME: dbName
     };
-
 
     try {
         const response = await fetch(url + '/algorithm-test', {
@@ -73,8 +94,7 @@ async function startAnalysis() {
         return data;
 
     } catch (error) {
-        console.error(" Error en la conexión o procesamiento:", error);
+        console.error("Error en la conexión o procesamiento:", error);
         return null;
     }
 }
-

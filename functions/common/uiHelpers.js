@@ -1,3 +1,11 @@
+/**
+ * Alterna la visibilidad de una caja de información (`tabContent`) en la interfaz,
+ * cambiando su estilo de visualización, el ícono del triángulo y expandiendo el tab
+ * lateral si el ancho de pantalla es menor o igual a 800px.
+ *
+ * @function toggleInfoBox
+ * @returns {void}
+ */
 function toggleInfoBox() {
   const content = document.getElementById('tabContent');
   const triangle = document.getElementById('triangleIcon');

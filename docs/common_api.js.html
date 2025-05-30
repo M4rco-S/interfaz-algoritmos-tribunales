@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: common/api.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: common/api.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @constant {string} url - URL base del backend. */
+const url = "http://localhost:8000/api";
+
+/**
+ * Envía un archivo CSV al servidor mediante POST.
+ * 
+ * @async
+ * @function sendFile
+ * @param {File} selectedFile - Archivo CSV seleccionado por el usuario.
+ * @returns {Promise&lt;boolean>} Retorna `true` si la carga fue exitosa, de lo contrario `false`.
+ */
+async function sendFile(selectedFile) {
+    const formData = new FormData();
+    formData.append('bd_name', selectedFile);
+
+    try {
+        const response = await fetch(url + '/upload-csv', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("Respuesta con error:", data);
+            alert("Error: " + (data.message || "Error desconocido al subir el archivo"));
+            return false;
+        }
+
+        return true;
+
+    } catch (error) {
+        console.error("Error de red:", error);
+        alert("Error de red o del servidor: " + error.message);
+        return false;
+    }
+}
+
+/**
+ * Obtiene los encabezados del archivo cargado desde el servidor y los guarda en localStorage.
+ * Redirige al usuario a la página `select-algorithm.html` al finalizar.
+ *
+ * @async
+ * @function getHeader
+ * @param {string} fileName - Nombre del archivo CSV previamente cargado.
+ * @returns {Promise&lt;void>}
+ */
+async function getHeader(fileName) {
+    try {
+        const response = await fetch(`${url}/get-features?fileName=${encodeURIComponent(fileName)}`);
+        const rawText = await response.text();
+        const data = JSON.parse(rawText);
+
+        localStorage.setItem('encabezadosCSV', JSON.stringify(data));
+        
+        window.location.href = "select-algorithm.html";
+    } catch (error) {
+        console.error("Error al obtener o procesar los encabezados:", error);
+    }
+}
+
+/**
+ * Inicia el análisis enviando los datos seleccionados por el usuario al servidor.
+ *
+ * @async
+ * @function startAnalysis
+ * @returns {Promise&lt;Object|null>} Objeto con los resultados del análisis si fue exitoso, o `null` en caso de error.
+ */
+async function startAnalysis() {
+    const algorithm = localStorage.getItem('algorithmSelectedKey');
+    const background = JSON.parse(localStorage.getItem('backgroundSelectedKey') || '[]');
+    const consequent = localStorage.getItem('conseqSelected');
+    const dbName = localStorage.getItem('csvFileName');
+
+    const payload = {
+        file_type: algorithm,
+        antecedentes: background,
+        consecuente: consequent,
+        BD_NAME: dbName
+    };
+
+    try {
+        const response = await fetch(url + '/algorithm-test', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error del servidor: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error("Error en la conexión o procesamiento:", error);
+        return null;
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Events</h3><ul><li><a href="global.html#event:DOMContentLoaded">DOMContentLoaded</a></li><li><a href="window.html#.event:onload">onload</a></li></ul><h3>Global</h3><ul><li><a href="global.html#chargeBackground">chargeBackground</a></li><li><a href="global.html#cleanFile">cleanFile</a></li><li><a href="global.html#endAnalysis">endAnalysis</a></li><li><a href="global.html#exportTable">exportTable</a></li><li><a href="global.html#getHeader">getHeader</a></li><li><a href="global.html#goToIndex">goToIndex</a></li><li><a href="global.html#goToSelectAlgo">goToSelectAlgo</a></li><li><a href="global.html#goToSelectBack">goToSelectBack</a></li><li><a href="global.html#implementedAlgorithms">implementedAlgorithms</a></li><li><a href="global.html#isInternalNavigation">isInternalNavigation</a></li><li><a href="global.html#renderAgrupacionTables">renderAgrupacionTables</a></li><li><a href="global.html#renderAsociacionTables">renderAsociacionTables</a></li><li><a href="global.html#renderClasificacionTables">renderClasificacionTables</a></li><li><a href="global.html#renderInfoAlgoritmo">renderInfoAlgoritmo</a></li><li><a href="global.html#saveConseq">saveConseq</a></li><li><a href="global.html#saveSelection">saveSelection</a></li><li><a href="global.html#selectAgrupacion">selectAgrupacion</a></li><li><a href="global.html#selectAsociacion">selectAsociacion</a></li><li><a href="global.html#selectClasificacion">selectClasificacion</a></li><li><a href="global.html#sendFile">sendFile</a></li><li><a href="global.html#startAnalysis">startAnalysis</a></li><li><a href="global.html#toAnalysis">toAnalysis</a></li><li><a href="global.html#toggleInfoBox">toggleInfoBox</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri May 30 2025 10:38:26 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

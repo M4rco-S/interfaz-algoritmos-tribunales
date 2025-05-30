@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: file-upload.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: file-upload.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @fileoverview Manejo de carga de archivo CSV y almacenamiento local al iniciar la aplicación. */
+
+/**
+ * Indica si la navegación es interna para evitar limpiar el localStorage.
+ * @type {boolean}
+ */
+let isInternalNavigation = false;
+
+/**
+ * Limpia el localStorage al cerrar o recargar la página, excepto si es navegación interna.
+ */
+window.addEventListener('beforeunload', () => {
+    if (!isInternalNavigation) {
+        localStorage.clear();
+    }
+});
+
+/**
+ * Se ejecuta al cargar completamente el DOM.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    /** @type {HTMLButtonElement} */
+    const uploadBtn = document.getElementById('uploadBtn');
+
+    /** @type {HTMLInputElement} */
+    const fileInput = document.getElementById('csvFile');
+
+    /** @type {HTMLElement} */
+    const fileStatus = document.getElementById('file-status');
+
+    /** @type {File|null} */
+    let selectedFile = null;
+
+    /**
+     * Simula clic en el input de archivo al hacer clic en el botón.
+     */
+    uploadBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    /**
+     * Maneja el evento de selección de archivo.
+     */
+    fileInput.addEventListener('change', function () {
+        if (this.files &amp;&amp; this.files.length > 0) {
+            selectedFile = this.files[0];
+            const fileName = selectedFile.name;
+            fileStatus.textContent = fileName;
+
+            localStorage.setItem('csvFileName', fileName);
+
+            // Leer contenido del archivo y almacenarlo
+            const reader = new FileReader();
+
+            /**
+             * Evento al cargar el contenido del archivo.
+             * @param {ProgressEvent&lt;FileReader>} event
+             */
+            reader.onload = function (event) {
+                const content = /** @type {string} */ (event.target.result);
+                localStorage.setItem('csvContent', content);
+            };
+
+            reader.readAsText(selectedFile);
+        }
+    });
+
+    /**
+     * Envía el archivo seleccionado y obtiene encabezados si es exitoso.
+     */
+    sendBtn.addEventListener('click', async () => {
+        isInternalNavigation = true;
+
+        if (!selectedFile) {
+            alert("Primero selecciona un archivo.");
+            return;
+        }
+
+        /** @type {boolean} */
+        const success = await sendFile(selectedFile);
+        if (!success) return;
+
+        const fileName = localStorage.getItem('csvFileName');
+        getHeader(fileName);
+    });
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Events</h3><ul><li><a href="global.html#event:DOMContentLoaded">DOMContentLoaded</a></li><li><a href="window.html#.event:onload">onload</a></li></ul><h3>Global</h3><ul><li><a href="global.html#chargeBackground">chargeBackground</a></li><li><a href="global.html#cleanFile">cleanFile</a></li><li><a href="global.html#endAnalysis">endAnalysis</a></li><li><a href="global.html#exportTable">exportTable</a></li><li><a href="global.html#getHeader">getHeader</a></li><li><a href="global.html#goToIndex">goToIndex</a></li><li><a href="global.html#goToSelectAlgo">goToSelectAlgo</a></li><li><a href="global.html#goToSelectBack">goToSelectBack</a></li><li><a href="global.html#implementedAlgorithms">implementedAlgorithms</a></li><li><a href="global.html#isInternalNavigation">isInternalNavigation</a></li><li><a href="global.html#renderAgrupacionTables">renderAgrupacionTables</a></li><li><a href="global.html#renderAsociacionTables">renderAsociacionTables</a></li><li><a href="global.html#renderClasificacionTables">renderClasificacionTables</a></li><li><a href="global.html#renderInfoAlgoritmo">renderInfoAlgoritmo</a></li><li><a href="global.html#saveConseq">saveConseq</a></li><li><a href="global.html#saveSelection">saveSelection</a></li><li><a href="global.html#selectAgrupacion">selectAgrupacion</a></li><li><a href="global.html#selectAsociacion">selectAsociacion</a></li><li><a href="global.html#selectClasificacion">selectClasificacion</a></li><li><a href="global.html#sendFile">sendFile</a></li><li><a href="global.html#startAnalysis">startAnalysis</a></li><li><a href="global.html#toAnalysis">toAnalysis</a></li><li><a href="global.html#toggleInfoBox">toggleInfoBox</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri May 30 2025 10:38:26 GMT-0600 (hora estándar central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

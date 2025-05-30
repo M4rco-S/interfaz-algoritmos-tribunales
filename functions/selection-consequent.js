@@ -1,8 +1,22 @@
-function saveConseq(selected){
+/**
+ * Guarda en localStorage el valor de la consecuencia seleccionada.
+ *
+ * @function saveConseq
+ * @param {HTMLInputElement} selected - Elemento input seleccionado con el valor de la consecuencia.
+ * @returns {void}
+ */
+function saveConseq(selected) {
     const valor = selected.value;
     localStorage.setItem('conseqSelected', valor);
 }
 
+/**
+ * Ejecuta el análisis una vez que el usuario selecciona una consecuencia.
+ * Si se selecciona, guarda la información y redirige a la página de resumen.
+ *
+ * @function toAnalysis
+ * @returns {void}
+ */
 function toAnalysis() {
     const selected = document.querySelector('input[name="conseq"]:checked');
 
@@ -12,7 +26,6 @@ function toAnalysis() {
         startAnalysis().then(data => {
             if (data !== null) {
                 localStorage.setItem('serverResponse', JSON.stringify(data));
-
                 window.location.href = 'summary.html';
             }
         });
@@ -22,7 +35,15 @@ function toAnalysis() {
     }
 }
 
-window.onload = function() {
+/**
+ * Evento que se dispara cuando se carga completamente la ventana.
+ * Genera las opciones de radio para la selección de consecuencia,
+ * filtrando los antecedentes ya seleccionados.
+ *
+ * @event window.onload
+ * @returns {void}
+ */
+window.onload = function () {
     const backgroundSelected = JSON.parse(localStorage.getItem("backgroundSelectedKey") || "[]");
 
     const rawHeaders = localStorage.getItem("encabezadosCSV");
@@ -60,5 +81,3 @@ window.onload = function() {
         });
     }
 }
-
-

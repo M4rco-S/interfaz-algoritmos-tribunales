@@ -1,0 +1,18 @@
+{
+  "name": "tribunales-front-new",
+  "version": "1.0.0",
+  "description": "Este proyecto permite analizar datos de pacientes mediante algoritmos de **Clasificación**, **Asociación** y **Agrupación**, ofreciendo resultados visuales y exportables en formato Excel.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jsdoc": "^4.0.4"
+  },
+  "dependencies": {
+    "tribunales-front-new": "file:"
+  }
+}
